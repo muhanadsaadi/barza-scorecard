@@ -47,7 +47,7 @@ function scoreShop(shop) {
     const score = stepScore(rating, RATING_STEPS);
     checks.push({
       id: 'rating', max: 2, score,
-      title_ar: 'تقييم Google', title_en: 'Google rating',
+      title_ar: 'تقييم جوجل', title_en: 'Google rating',
       value: rating ? `${rating.toFixed(1)} ★` : '—',
       fix: rating
         ? {

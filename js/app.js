@@ -109,7 +109,7 @@ function renderCard() {
   ring.style.strokeDashoffset = circumference * (1 - result.total / 10);
   $('cRing').style.setProperty('--grade', result.grade.color);
   $('cScore').textContent = fmt(result.total);
-  $('cGrade').textContent = `${result.grade.ar} · ${result.grade.en}`;
+  $('cGrade').textContent = `${result.grade.ar}\n${result.grade.en}`;   // two lines (CSS: white-space: pre-line)
 
   // --- 6 checks ---
   const icons = { pass: '✓', partial: '!', fail: '✕' };
