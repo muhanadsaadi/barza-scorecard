@@ -20,6 +20,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* "hidden" attribute always wins */
 body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); line-height: 1.45; }
 [lang="en"] { direction: ltr; unicode-bidi: isolate; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
@@ -30,8 +31,9 @@ body { margin: 0; font-family: var(--font); color: var(--ink); background: var(-
   padding: 16px 20px; background: var(--barza); color: #fff;
 }
 .app-header h1 { margin: 0; font-size: 1.2rem; }
-.app-header h1 span { font-weight: 400; opacity: .8; font-size: .9rem; margin-inline-start: 6px; }
+.app-header h1 span { display: block; font-weight: 400; opacity: .8; font-size: .9rem; }
 .app-header p { margin: 2px 0 0; font-size: .85rem; opacity: .85; }
+.app-header p span { display: block; }
 
 .layout {
   display: grid; gap: 20px; padding: 20px;
@@ -75,11 +77,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--barza-2); outlin
 /* ---------- 3) The A4 sheet ---------- */
 .sheet {
   width: 210mm; height: 297mm;           /* exact A4 */
-  padding: 12mm 14mm 10mm;
+  padding: 10mm 14mm 8mm;
   background: #fff; color: var(--ink);
   box-shadow: 0 6px 30px rgba(0,0,0,.12);
   transform-origin: 0 0;
-  display: flex; flex-direction: column; gap: 6mm;
+  display: flex; flex-direction: column; gap: 4mm;
   overflow: hidden;
   -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
@@ -102,33 +104,33 @@ input:focus, select:focus, textarea:focus { border-color: var(--barza-2); outlin
 .shop-info p { margin: 1mm 0 0; color: var(--muted); font-size: 11pt; }
 .shop-stats span { display: inline-block; background: #F1F5F5; border-radius: 99px; padding: 1mm 3.5mm; margin-inline-end: 2mm; color: var(--ink); font-size: 10pt; }
 
-.score-ring { position: relative; width: 40mm; height: 40mm; flex-shrink: 0; }
+.score-ring { position: relative; width: 36mm; height: 36mm; flex-shrink: 0; }
 .score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
 .ring-bg { fill: none; stroke: #EDF1F1; stroke-width: 11; }
 .ring-fg { fill: none; stroke: var(--grade, var(--pass)); stroke-width: 11; stroke-linecap: round; transition: stroke-dashoffset .4s; }
 .ring-text { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; direction: ltr; }
-.ring-text strong { font-size: 26pt; line-height: 1; color: var(--ink); }
+.ring-text strong { font-size: 24pt; line-height: 1; color: var(--ink); }
 .ring-text span { font-size: 10pt; color: var(--muted); }
-.ring-text em { font-style: normal; font-weight: 700; font-size: 9pt; color: var(--grade, var(--pass)); margin-top: 1mm; }
+.ring-text em { font-style: normal; font-weight: 700; font-size: 8pt; line-height: 1.25; white-space: pre-line; color: var(--grade, var(--pass)); margin-top: 1mm; }
 
 .sheet-block h4 { margin: 0 0 2.5mm; font-size: 12pt; color: var(--barza); border-bottom: 2px solid var(--gold); padding-bottom: 1.5mm; display: flex; justify-content: space-between; }
 .sheet-block h4 span { font-weight: 400; color: var(--muted); font-size: 10pt; }
 
 /* The 6 checks as rows with a progress bar */
-.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 2mm; }
-.checks li { display: grid; grid-template-columns: 7mm 1fr 34mm 14mm; align-items: center; gap: 3mm; font-size: 10.5pt; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5mm; }
+.checks li { display: grid; grid-template-columns: 7mm 1fr 34mm 18mm; align-items: center; gap: 3mm; font-size: 10.5pt; }
 .checks .icon { width: 6mm; height: 6mm; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 9pt; font-weight: 700; }
 .checks .pass .icon { background: var(--pass); }
 .checks .partial .icon { background: var(--partial); }
 .checks .fail .icon { background: var(--fail); }
-.checks .label small { color: var(--muted); font-size: 8.5pt; margin-inline-start: 2mm; }
-.checks .label em { font-style: normal; color: var(--muted); font-size: 9pt; margin-inline-start: 2mm; }
+.checks .label small { color: var(--muted); font-size: 8.5pt; margin: 0 2mm; }
+.checks .label em { font-style: normal; color: var(--muted); font-size: 9pt; }
 .bar { height: 2.6mm; background: #EDF1F1; border-radius: 99px; overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 99px; }
 .pass .bar i { background: var(--pass); }
 .partial .bar i { background: var(--partial); }
 .fail .bar i { background: var(--fail); }
-.checks .pts { text-align: end; font-weight: 700; direction: ltr; font-size: 10pt; }
+.checks .pts { text-align: end; font-weight: 700; direction: ltr; font-size: 10pt; white-space: nowrap; }
 
 /* Top 3 fixes */
 .fixes { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.5mm; counter-reset: fix; }
@@ -142,7 +144,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--barza-2); outlin
   width: 6.5mm; height: 6.5mm; border-radius: 50%; background: var(--barza); color: #fff;
   display: grid; place-items: center; font-weight: 700; font-size: 10pt;
 }
-.fixes p { margin: 0; font-size: 10.5pt; }
+.fixes p { margin: 0; font-size: 10pt; line-height: 1.4; }
 .fixes p[lang="en"] { color: var(--muted); font-size: 9pt; margin-top: .8mm; }
 .fixes .gain { float: inline-end; font-size: 8.5pt; font-weight: 700; color: var(--pass); direction: ltr; margin-inline-start: 2mm; }
 .fixes .none { padding-inline-start: 4mm; border-color: var(--pass); background: #EEF7F1; }
@@ -153,15 +155,15 @@ input:focus, select:focus, textarea:focus { border-color: var(--barza-2); outlin
 .sheet-foot {
   margin-top: auto;
   display: flex; align-items: center; gap: 6mm;
-  border: 1.5px solid var(--barza); border-radius: 4mm; padding: 4mm 5mm;
+  border: 1.5px solid var(--barza); border-radius: 4mm; padding: 3mm 5mm;
 }
-.qr { width: 30mm; height: 30mm; flex-shrink: 0; }
+.qr { width: 27mm; height: 27mm; flex-shrink: 0; }
 .qr svg { width: 100%; height: 100%; display: block; }
 .cta { display: grid; gap: 1mm; }
 .cta strong { font-size: 12pt; color: var(--barza); }
 .cta span { color: var(--muted); font-size: 10pt; }
 .cta b { font-size: 11pt; color: var(--ink); text-align: start; }
-.disclaimer { margin: -3mm 0 0; font-size: 7.5pt; color: #8A9495; text-align: center; }
+.disclaimer { margin: -2mm 0 0; font-size: 7.5pt; color: #8A9495; text-align: center; }
 
 /* ---------- 4) Print: show only the A4 sheet ---------- */
 @page { size: A4; margin: 0; }
