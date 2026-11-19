@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--
+  Barza Scorecard — digital presence score card for local shops
+  ==============================================================
+  Left/top:  a form where you type the shop's details.
+  Right/bottom: a live A4 preview of the printable score card.
+  Logic lives in js/scoring.js (rules) and js/app.js (page).
+-->
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>بطاقة تقييم الحضور الرقمي | Barza Scorecard</title>
+  <meta name="description" content="أداة مجانية لتقييم الحضور الرقمي للمحلات وطباعة بطاقة ثنائية اللغة — Free tool to score a shop's online presence and print a bilingual A4 card">
+  <meta name="theme-color" content="#0F3D3E">
+  <link rel="icon" href="assets/barza-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="app-header no-print">
+    <img src="assets/barza-mark.svg" alt="" width="40" height="40">
+    <div>
+      <h1>بطاقة الحضور الرقمي <span lang="en">Digital Presence Scorecard</span></h1>
+      <p>أدخل بيانات المحل لتحصل على درجة من ١٠ وأهم ٣ تحسينات — <span lang="en">Enter a shop's details to get a score /10 and its top 3 fixes.</span></p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- ================= FORM ================= -->
+    <form id="shopForm" class="panel no-print" autocomplete="off" novalidate>
+      <fieldset>
+        <legend>بيانات المحل <span lang="en">Shop details</span></legend>
+
+        <label>اسم المحل <span lang="en">Shop name</span>
+          <input name="name" type="text" maxlength="60" required>
+        </label>
+
+        <div class="row">
+          <label>المنطقة <span lang="en">Area</span>
+            <input name="area" type="text" maxlength="40">
+          </label>
+          <label>النشاط <span lang="en">Category</span>
+            <select name="category">
+              <option value="cafe">مقهى · Café</option>
+              <option value="restaurant">مطعم · Restaurant</option>
+              <option value="bakery">مخبز وحلويات · Bakery</option>
+              <option value="salon">صالون · Salon</option>
+              <option value="retail">متجر · Retail</option>
+              <option value="other">أخرى · Other</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>تقييم Google <span lang="en">Rating (0–5)</span>
+            <input name="rating" type="number" min="0" max="5" step="0.1" inputmode="decimal">
+          </label>
+          <label>عدد المراجعات <span lang="en">Reviews</span>
+            <input name="reviews" type="number" min="0" step="1" inputmode="numeric">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>ماذا يوجد في ملف المحل؟ <span lang="en">What does the listing have?</span></legend>
+        <label class="check"><input type="checkbox" name="photos"> صور واضحة <span lang="en">Good photos</span></label>
+        <label class="check"><input type="checkbox" name="hours"> ساعات العمل <span lang="en">Opening hours</span></label>
+        <label class="check"><input type="checkbox" name="menu"> قائمة / أسعار <span lang="en">Menu / price list</span></label>
+        <label class="check"><input type="checkbox" name="orderLink"> رابط طلب أو حجز <span lang="en">Order / booking link</span></label>
+        <label class="check"><input type="checkbox" name="replies"> يرد على المراجعات <span lang="en">Replies to reviews</span></label>
+        <label class="check"><input type="checkbox" name="bilingual"> معلومات بالعربية والإنجليزية <span lang="en">Bilingual info</span></label>
+      </fieldset>
+
+      <label>ملاحظات <span lang="en">Notes</span>
+        <textarea name="notes" rows="3" maxlength="240"></textarea>
+      </label>
+
+      <div class="actions">
+        <button type="button" id="printBtn" class="btn primary">🖨️ طباعة / حفظ PDF <span lang="en">Print / Save PDF</span></button>
+        <button type="button" id="exampleBtn" class="btn">مثال <span lang="en">Example</span></button>
+        <button type="button" id="clearBtn" class="btn ghost">مسح <span lang="en">Clear</span></button>
+      </div>
+      <p class="hint">💡 في نافذة الطباعة اختر «حفظ كـ PDF» والحجم A4. <span lang="en">In the print dialog choose "Save as PDF", size A4.</span></p>
+    </form>
+
+    <!-- ================= A4 PREVIEW / PRINT ================= -->
+    <section class="preview" aria-label="معاينة البطاقة | Card preview">
+      <div id="sheetFit" class="sheet-fit">
+        <article id="sheet" class="sheet" aria-live="polite">
+
+          <!-- Header band with Barza branding -->
+          <header class="sheet-head">
+            <div class="sheet-brand">
+              <img src="assets/barza-mark.svg" alt="" width="46" height="46">
+              <div>
+                <strong>برزة <span>| Barza</span></strong>
+                <small>نبرز محلك على الإنترنت · We make local shops stand out</small>
+              </div>
+            </div>
+            <div class="sheet-title">
+              <h2>بطاقة تقييم الحضور الرقمي</h2>
+              <p lang="en">Digital Presence Scorecard</p>
+              <time id="cDate"></time>
+            </div>
+          </header>
+
+          <!-- Shop info + big score -->
+          <div class="sheet-hero">
+            <div class="shop-info">
+              <h3 id="cName"></h3>
+              <p id="cMeta"></p>
+              <p class="shop-stats">
+                <span id="cRating"></span>
+                <span id="cReviews"></span>
+              </p>
+            </div>
+            <div class="score-ring" id="cRing">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="60" cy="60" r="52" class="ring-bg"/>
+                <circle cx="60" cy="60" r="52" class="ring-fg" id="cRingFg"/>
+              </svg>
+              <div class="ring-text">
+                <strong id="cScore"></strong><span>/10</span>
+                <em id="cGrade"></em>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6 checks -->
+          <section class="sheet-block">
+            <h4>الفحوصات الستة <span lang="en">The 6 checks</span></h4>
+            <ol id="cChecks" class="checks"></ol>
+          </section>
+
+          <!-- Top 3 fixes -->
+          <section class="sheet-block">
+            <h4>أهم ٣ تحسينات <span lang="en">Top 3 fixes</span></h4>
+            <ol id="cFixes" class="fixes"></ol>
+          </section>
+
+          <!-- Optional notes -->
+          <section class="sheet-block" id="cNotesBlock">
+            <h4>ملاحظات <span lang="en">Notes</span></h4>
+            <p id="cNotes" class="notes"></p>
+          </section>
+
+          <!-- Footer: call to action + WhatsApp QR -->
+          <footer class="sheet-foot">
+            <div id="cQr" class="qr" role="img" aria-label="QR: WhatsApp Barza"></div>
+            <div class="cta">
+              <strong>تريد تطبيق هذه التحسينات؟ امسح الرمز وتواصل مع برزة</strong>
+              <span lang="en">Want these fixes done? Scan to WhatsApp Barza</span>
+              <b dir="ltr">+968 7663 2622 · wa.me/96876632622</b>
+            </div>
+          </footer>
+          <p class="disclaimer">تقييم تقديري مبني على معلومات مُدخلة يدوياً من الملف العام للمحل · Indicative score based on manually entered public listing data.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- QR generator: qrcode-generator by Kazuhiko Arase (MIT), included locally -->
+  <script src="js/vendor/qrcode.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
