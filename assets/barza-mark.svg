@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Barza">
+  <rect width="64" height="64" rx="16" fill="#0F3D3E"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="#E2A72E" stroke-width="2" opacity=".55"/>
+  <rect x="15" y="36" width="8" height="14" rx="2" fill="#FFFFFF" opacity=".55"/>
+  <rect x="28" y="28" width="8" height="22" rx="2" fill="#FFFFFF" opacity=".8"/>
+  <rect x="41" y="18" width="8" height="32" rx="2" fill="#E2A72E"/>
+  <path d="M45 8 l2.2 4.6 5 .7 -3.6 3.5 .9 5 -4.5 -2.4 -4.5 2.4 .9 -5 -3.6 -3.5 5 -.7z" fill="#E2A72E"/>
+</svg>
